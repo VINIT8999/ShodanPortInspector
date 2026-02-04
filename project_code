@@ -67,13 +67,45 @@ def main():
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+  
     output = f"""
-Scan Time: {timestamp}
-IP Address: {ip}
-Organization: {org}
-Operating System: {os_name}
-Open Ports: {ports}
-Risky Ports Detected: {risky}
+====================================================
+        SOC NETWORK EXPOSURE ASSESSMENT
+====================================================
+
+Scan Timestamp   : {timestamp}
+Scan Type        : External Surface Enumeration
+Data Source      : Shodan Intelligence Platform
+
+----------------------------------------------------
+TARGET INFORMATION
+----------------------------------------------------
+Resolved IP      : {ip}
+Organization     : {org}
+Operating System : {os_name}
+
+----------------------------------------------------
+SERVICE EXPOSURE SUMMARY
+----------------------------------------------------
+Open Ports Detected:
+{ports}
+
+----------------------------------------------------
+RISK ANALYSIS
+----------------------------------------------------
+Risky Ports Identified:
+{risky_ports}
+
+Risk Level       : {risk_level}
+
+----------------------------------------------------
+DISCLAIMER
+----------------------------------------------------
+Passive intelligence only. No active scanning performed.
+
+====================================================
+          END OF SOC REPORT
+====================================================
 """
 
     print(output)

@@ -1,0 +1,83 @@
+import shodan # get a  info from shodan
+import socket # convet domain name to ip 
+import os # hide a API key
+from datetime import datetime   
+
+API_KEY = os.getenv("SHODAN_API_KEY")   # environment variable use
+if API_KEY is None:
+    print("API KEY IS NOT FOUND") 
+    exit()
+
+api = shodan.Shodan(API_KEY)
+
+def get_ip(target):
+    try:
+        return socket.gethostbyname(target)  # Domain to IP
+    except Exception as e:
+        print("Invalid domain name")
+        return None
+    
+def fetch_shodan_data(ip):
+    try:
+        return api.host(ip)
+    except Exception as e:
+        print("shodan error")
+        return None
+
+#for cheacking a risk
+def risk_analysis(ports):
+    risky_port = [21,22,23,3306,3389]   
+    risk = []
+
+    for port in ports:
+        if port in risky_port:
+            risk.append(port)
+    return risk
+
+def save_to_file(data):
+    with open("ports_data_store.txt", "a") as file:
+        file.write(data)
+
+def main():
+    target = input("Enter a website or IP: ").strip()
+
+    if not target:
+        print("Empty input")
+        return
+
+    if not target.replace(".", "").isdigit():
+        ip = get_ip(target)
+    else:
+        ip = target
+
+    if ip is None:
+        return
+
+    print("\nResolved IP:", ip)
+
+    result = fetch_shodan_data(ip)
+    if result is None:
+        return
+
+    ports = result.get("ports", [])
+    org = result.get("org", "N/A")
+    os_name = result.get("os", "N/A")
+
+    risky = risk_analysis(ports)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    output = f"""
+Scan Time: {timestamp}
+IP Address: {ip}
+Organization: {org}
+Operating System: {os_name}
+Open Ports: {ports}
+Risky Ports Detected: {risky}
+"""
+
+    print(output)
+    save_to_file(output)
+
+if __name__ == "__main__":
+    main()

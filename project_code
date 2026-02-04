@@ -67,44 +67,48 @@ def main():
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-  
+    if len(risky) >= 2:
+        risk_level = "HIGH"
+    elif len(risky) == 1:
+        risk_level = "MEDIUM"
+    else:
+        risk_level = "LOW"
+
     output = f"""
 ====================================================
-        SOC NETWORK EXPOSURE ASSESSMENT
+        SOC NETWORK EXPOSURE REPORT
 ====================================================
 
-Scan Timestamp   : {timestamp}
-Scan Type        : External Surface Enumeration
-Data Source      : Shodan Intelligence Platform
+Scan Time        : {timestamp}
+Scan Type        : Passive Reconnaissance
+Data Source      : Shodan
 
 ----------------------------------------------------
-TARGET INFORMATION
+TARGET DETAILS
 ----------------------------------------------------
-Resolved IP      : {ip}
+IP Address       : {ip}
 Organization     : {org}
 Operating System : {os_name}
 
 ----------------------------------------------------
-SERVICE EXPOSURE SUMMARY
+SERVICE EXPOSURE
 ----------------------------------------------------
-Open Ports Detected:
-{ports}
+Open Ports       : {ports}
 
 ----------------------------------------------------
 RISK ANALYSIS
 ----------------------------------------------------
-Risky Ports Identified:
-{risky_ports}
-
+Risky Ports      : {risky}
 Risk Level       : {risk_level}
 
 ----------------------------------------------------
-DISCLAIMER
+ANALYST NOTE
 ----------------------------------------------------
-Passive intelligence only. No active scanning performed.
+This report is based on passive intelligence data.
+No active scanning or exploitation was performed.
 
 ====================================================
-          END OF SOC REPORT
+            END OF SOC REPORT
 ====================================================
 """
 
@@ -113,3 +117,4 @@ Passive intelligence only. No active scanning performed.
 
 if __name__ == "__main__":
     main()
+
